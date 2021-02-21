@@ -1,0 +1,74 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class QuizMaker {
+
+	private static final Scanner in = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+		
+		File file = null;
+		
+		while(true) {
+			System.out.println("Where is the quiz file?");
+			String pathToFile = in.nextLine();
+			
+			file = new File(pathToFile);
+			
+			if(!file.exists() || !file.isFile()) {
+				System.out.println("File does not exist.");
+			} else {
+				break;
+			}
+		}
+		
+		int correctAnswers = 0;
+		int incorrectAnswers = 0;
+		
+		try (Scanner fileScanner = new Scanner(file)) {
+			
+			while (fileScanner.hasNextLine()) {
+				
+				String lineFromFile = fileScanner.nextLine();
+				
+				QuizQuestion question = new QuizQuestion();
+				QuizAllAnswers answers = new QuizAllAnswers();
+				QuizCorrectAnswer correct = new QuizCorrectAnswer();
+				
+				if(!(question.getQuestion(lineFromFile).contains("Question formatted incorrectly.") || 
+						answers.getAllAnswers(lineFromFile).contains("Question formatted incorrectly.") ||
+						correct.correctAnswerAsString(lineFromFile).contains("Question formatted incorrectly."))) {
+					
+					System.out.print(question.getQuestion(lineFromFile) + "\n" + answers.getAllAnswers(lineFromFile));
+					int response = 0;
+					
+					while((response < 1 || response > answers.getAnswerCount(lineFromFile))){
+						System.out.print("\n\nYour answer: ");
+						response = in.nextInt();
+						if(response == correct.correctAnswerAsInt(lineFromFile)) {
+							System.out.println("Correct!\n");
+							correctAnswers++;
+						} else if ((response < 1 || response > answers.getAnswerCount(lineFromFile))){
+							System.out.println("Invalid response!");
+						} else {
+							System.out.println("Sorry, that isn't correct!\n");
+							incorrectAnswers++;
+						}
+					}
+					
+				} else {
+					System.out.println("Question formatted incorrectly.");
+				}
+				
+				
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("\nYou got " + correctAnswers + " answer(s) correct out of the total " 
+				+ (correctAnswers + incorrectAnswers) + " questions asked.");
+	}
+
+}
