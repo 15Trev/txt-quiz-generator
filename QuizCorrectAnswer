@@ -1,0 +1,34 @@
+public class QuizCorrectAnswer {
+	public int correctAnswerAsInt(String fileLine) {
+		
+		fileLine = fileLine.substring(fileLine.indexOf("|") + 1, fileLine.length());
+		int answer = 0;
+		
+		while(fileLine.contains("*")) {
+			
+			if(fileLine.contains("|")) {
+				
+				fileLine = fileLine.substring(fileLine.indexOf("|") + 1, fileLine.length());
+				answer ++;
+				
+			} else {
+				answer ++;
+				break;
+			}
+		}
+		return answer;
+	}
+	public String correctAnswerAsString(String fileLine) {
+		if(fileLine.indexOf("|") < fileLine.indexOf("*")) {
+			String correct = "";
+			for(int i = fileLine.indexOf("*") - 1; i > fileLine.indexOf("|"); i --) {
+				correct += fileLine.charAt(i);
+			}
+			StringBuilder reversed = new StringBuilder(correct);
+			String r = reversed.reverse().toString();
+			return r;
+		} else {
+			return "Question formatted incorrectly";
+		}
+	}
+}
