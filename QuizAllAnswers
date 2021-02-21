@@ -1,0 +1,32 @@
+public class QuizAllAnswers {
+	
+	private int answerCount;
+
+	public String getAllAnswers(String fileLine) {
+		
+		fileLine = fileLine.substring(fileLine.indexOf("|") + 1, fileLine.length());
+		
+		if(!fileLine.contains("|")) {
+			return "Question formatted incorrectly.";
+		} else {
+			
+			String fileLineNoStar = fileLine.replace("*", "");
+			
+			
+			String answers = "";
+			int qNum = 1;
+			
+			while(fileLineNoStar.contains("|")) {
+				answers += qNum + ". " + fileLineNoStar.substring(0, 1).toUpperCase() + fileLineNoStar.substring(1, fileLineNoStar.indexOf("|")) + "\n";
+				fileLineNoStar = fileLineNoStar.substring(fileLineNoStar.indexOf("|") + 1, fileLineNoStar.length());
+				qNum++;
+			}
+			answers += qNum + ". " + fileLineNoStar.substring(0, 1).toUpperCase() + fileLineNoStar.substring(1);
+			answerCount = qNum;
+			return answers;
+		}
+	}
+	public int getAnswerCount(String fileLine) {
+		return answerCount;
+	}
+}
